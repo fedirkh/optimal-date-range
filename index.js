@@ -30,13 +30,13 @@ function getTargetPeriods(dateFrom, dateTo, maxGranularity = config.GRANULARITY.
         let increment = [1, "d"];
         let bucket = config.GRANULARITY.DAY;
         if (d.date() === 1){
-            if (maxGranularity === config.GRANULARITY.YEAR && d.month() === 0 && +moment(+d).add(1, "y") < +dateTo) {
+            if (maxGranularity === config.GRANULARITY.YEAR && d.month() === 0 && +moment(+d).add(1, "y") < +to) {
                 bucket = config.GRANULARITY.YEAR;
                 increment = [1, "y"];
-            } else if(~[config.GRANULARITY.YEAR, config.GRANULARITY.HALF_YEAR].indexOf(maxGranularity) && (d.month() === 0 || d.month() === 6) && +moment(+d).add(6, "M") < +dateTo){
+            } else if(~[config.GRANULARITY.YEAR, config.GRANULARITY.HALF_YEAR].indexOf(maxGranularity) && (d.month() === 0 || d.month() === 6) && +moment(+d).add(6, "M") < +to){
                 bucket = config.GRANULARITY.HALF_YEAR;
                 increment = [6, "M"];
-            } else if(~[config.GRANULARITY.YEAR, config.GRANULARITY.HALF_YEAR, config.GRANULARITY.MONTH].indexOf(maxGranularity) && +moment(+d).add(1, "M") < +dateTo){
+            } else if(~[config.GRANULARITY.YEAR, config.GRANULARITY.HALF_YEAR, config.GRANULARITY.MONTH].indexOf(maxGranularity) && +moment(+d).add(1, "M") < +to){
                 bucket = config.GRANULARITY.MONTH;
                 increment = [1, "M"];
             }

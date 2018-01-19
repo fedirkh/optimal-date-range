@@ -5,8 +5,8 @@ let getPeriods = require("../index.js");
 
 describe("get periods", function () {
     it("should return expected periods with max granularity = year", function (done) {
-        let dateFrom = moment("2017-05-21");
-        let dateTo = moment("2019-06-13");
+        let dateFrom = "2017-05-21";
+        let dateTo = "2019-06-13";
 
         let expectedData = { day:
                 [ '2017-05-21',
@@ -41,8 +41,8 @@ describe("get periods", function () {
         done();
     });
     it("should return expected periods with max granularity = month", function (done) {
-        let dateFrom = moment("2017-05-21");
-        let dateTo = moment("2019-06-13");
+        let dateFrom = "2017-05-21";
+        let dateTo = "2019-06-13";
 
         let expectedData = { day:
                 [ '2017-05-21',
@@ -99,3 +99,6 @@ describe("get periods", function () {
         done();
     });
 });
+let dateFrom = "2017-05-21";
+let dateTo = "2019-06-13";
+console.log(getPeriods(dateFrom, dateTo, "half_year"))
