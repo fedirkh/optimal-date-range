@@ -1,4 +1,4 @@
-# date-range
+# optimal-date-range
 
 Returns periods of time in target time range
 
