@@ -1,20 +1,21 @@
 {
-  "name": "date-range",
+  "name": "optimal-date-range",
   "version": "1.0.0",
-  "description": "Package returns periods of dates in target date range",
+  "description": "Returns periods of dates in target date range with custom max period of time",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/superiority/date-range.git"
+    "url": "git+https://github.com/superiority/optimal-date-range.git"
   },
-  "homepage": "https://github.com/superiority/date-range",
+  "homepage": "https://github.com/superiority/optimal-date-range",
   "author": {
     "name": "Fyodor",
     "email": "advantage.g2@gmail.com"
   },
+  "keywords": ["date", "range", "period"],
   "license": "WTFPL",
   "dependencies": {
     "moment": "^2.20.1"
