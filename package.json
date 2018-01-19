@@ -1,12 +1,20 @@
 {
   "name": "date-range",
   "version": "1.0.0",
-  "description": "",
+  "description": "Package returns periods of dates in target date range",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test"
   },
-  "author": "superiority",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/superiority/date-range.git"
+  },
+  "homepage": "https://github.com/superiority/date-range",
+  "author": {
+    "name": "Fyodor",
+    "email": "advantage.g2@gmail.com"
+  },
   "license": "WTFPL",
   "dependencies": {
     "moment": "^2.20.1"
