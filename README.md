@@ -5,7 +5,7 @@ Returns periods of time in target time range
 ## Example
 
 ```js
-let getRanges = require("date-range");
+let getRanges = require("optimal-date-range");
 
 return getRanges("2017-05-21", "2019-06-13");
 
@@ -48,7 +48,7 @@ Also possible to limit maximal granularity
 
 ```js
 
-let getRanges = require("date-range");
+let getRanges = require("optimal-date-range");
 
 return getRanges("2017-05-21", "2019-06-13", "half_year");
 
