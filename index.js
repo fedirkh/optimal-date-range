@@ -1,49 +1,78 @@
 "use strict";
 
-let moment = require("moment");
+const moment = require("moment");
 
-let config = {
-    GRANULARITY:{
-        DAY: "day",
-        YEAR: "year",
-        MONTH: "month",
-        HALF_YEAR: "half_year"
-    }
+const GRANULARITY = {
+    day: "day",
+    year: "year",
+    month: "month",
+    quarter: "quarter"
 };
 
-function createTimeBuckets(date){
-    let d = new moment(date);
-    let halfYearPart = d.quarter() < 3 ? 1 : 2;
-    return {
-        [config.GRANULARITY.DAY]: d.format("YYYY-MM-DD"),
-        [config.GRANULARITY.MONTH]: d.format("YYYY-MM"),
-        [config.GRANULARITY.HALF_YEAR]: d.format("YYYY") + `-${halfYearPart}-half-year`,
-        [config.GRANULARITY.YEAR]: d.format("YYYY")
-    };
-}
+const GRANULARITY_WEIGHT = {
+    day: 1,
+    month: 2,
+    quarter: 3,
+    year: 4
+};
 
-function getTargetPeriods(dateFrom, dateTo, maxGranularity = config.GRANULARITY.YEAR) {
+const FORMATS = {
+    DAY: "YYYY-MM-DD",
+    MONTH: "YYYY-MM",
+    QUARTER: "YYYY-Qo",
+    YEAR: "YYYY",
+};
+
+let formatDate = (format, date)=>(new moment(date).format(format));
+
+let formatDay = formatDate.bind(null, FORMATS.DAY);
+let formatMonth = formatDate.bind(null, FORMATS.MONTH);
+let formatQuarter = formatDate.bind(null, FORMATS.QUARTER);
+let formatYear = formatDate.bind(null, FORMATS.YEAR);
+
+
+let isGranularityAcceptable = (maxGranularity, granularity)=> {
+    return GRANULARITY_WEIGHT[granularity] <= GRANULARITY_WEIGHT[maxGranularity];
+};
+
+let isYearStart = date=>(date.month() === 0 && date.date() === 1);
+let isFullYearIncluded = (startDate, lastDate)=>(+moment(+startDate).add(1, "y") <= +lastDate);
+
+let isQuarterStart = date=>(date.quarter() !== moment(+date).subtract(1, "d").quarter());
+let isFullQuarterIncluded = (startDate, lastDate)=>+moment(+startDate).add(1, "Q") <= +lastDate;
+
+let isMonthStart = date=>date.date() === 1;
+let isFullMonthIncluded = (startDate, lastDate)=>+moment(+startDate).add(1, "M") <= +lastDate;
+
+function getTargetPeriods(dateFrom, dateTo, maxGranularity = GRANULARITY.year, formats) {
     let dates = {};
     let d = moment(dateFrom);
     let to = moment(dateTo);
     while (+d <= +to) {
-        let increment = [1, "d"];
-        let bucket = config.GRANULARITY.DAY;
-        if (d.date() === 1){
-            if (maxGranularity === config.GRANULARITY.YEAR && d.month() === 0 && +moment(+d).add(1, "y") < +to) {
-                bucket = config.GRANULARITY.YEAR;
-                increment = [1, "y"];
-            } else if(~[config.GRANULARITY.YEAR, config.GRANULARITY.HALF_YEAR].indexOf(maxGranularity) && (d.month() === 0 || d.month() === 6) && +moment(+d).add(6, "M") < +to){
-                bucket = config.GRANULARITY.HALF_YEAR;
-                increment = [6, "M"];
-            } else if(~[config.GRANULARITY.YEAR, config.GRANULARITY.HALF_YEAR, config.GRANULARITY.MONTH].indexOf(maxGranularity) && +moment(+d).add(1, "M") < +to){
-                bucket = config.GRANULARITY.MONTH;
-                increment = [1, "M"];
-            }
+        if (isGranularityAcceptable(maxGranularity, GRANULARITY.year) && isYearStart(d) && isFullYearIncluded(d, to)) {
+            if (!dates[GRANULARITY.year]) dates[GRANULARITY.year] = [];
+            dates[GRANULARITY.year].push(formatYear(d));
+            d.add(1, 'y');
+            continue;
         }
-        if (!dates[bucket]) dates[bucket] = [];
-        dates[bucket].push(createTimeBuckets(d)[bucket]);
-        d.add(increment[0], increment[1]);
+
+        if (isGranularityAcceptable(maxGranularity, GRANULARITY.quarter) && isQuarterStart(d) && isFullQuarterIncluded(d, to)) {
+            if (!dates[GRANULARITY.quarter]) dates[GRANULARITY.quarter] = [];
+            dates[GRANULARITY.quarter].push(formatQuarter(d));
+            d.add(1, 'Q');
+            continue;
+        }
+
+        if (isGranularityAcceptable(maxGranularity, GRANULARITY.month) && isMonthStart(d) && isFullMonthIncluded(d, to)) {
+            if (!dates[GRANULARITY.month]) dates[GRANULARITY.month] = [];
+            dates[GRANULARITY.month].push(formatMonth(d));
+            d.add(1, 'M');
+            continue;
+        }
+
+        if (!dates[GRANULARITY.day]) dates[GRANULARITY.day] = [];
+        dates[GRANULARITY.day].push(formatDay(d));
+        d.add(1, 'd');
     }
     return dates;
 }

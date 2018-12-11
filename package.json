@@ -15,7 +15,12 @@
     "name": "Fyodor",
     "email": "advantage.g2@gmail.com"
   },
-  "keywords": ["date", "range", "period"],
+  "keywords": [
+    "date",
+    "range",
+    "period",
+    "date-range"
+  ],
   "license": "WTFPL",
   "dependencies": {
     "moment": "^2.20.1"
