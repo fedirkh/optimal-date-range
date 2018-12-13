@@ -1,6 +1,6 @@
 {
   "name": "optimal-date-range",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Returns periods of dates in target date range with custom max period of time",
   "main": "index.js",
   "scripts": {
