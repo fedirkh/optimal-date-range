@@ -8,8 +8,9 @@ describe("get periods", function () {
         let dateFrom = "2017-05-21";
         let dateTo = "2019-06-13";
 
-        let expectedData = { day:
-                [ '2017-05-21',
+        let expectedData = {
+            day: [
+                '2017-05-21',
                     '2017-05-22',
                     '2017-05-23',
                     '2017-05-24',
@@ -32,20 +33,23 @@ describe("get periods", function () {
                     '2019-06-10',
                     '2019-06-11',
                     '2019-06-12',
-                    '2019-06-13' ],
-            month: [ '2017-06', '2019-01', '2019-02', '2019-03', '2019-04', '2019-05' ],
-            half_year: [ '2017-2-half-year' ],
-            year: [ '2018' ] };
+                    '2019-06-13'
+                ],
+            month: [ '2017-06', '2019-04', '2019-05' ],
+            quarter: [ '2017-3rd', '2017-4th', '2019-1st' ],
+            year: [ '2018' ]
+        };
 
         getPeriods(dateFrom, dateTo).should.be.eql(expectedData);
         done();
     });
-    it("should return expected periods with max granularity = month", function (done) {
+    it("should return expected periods with max granularity = quarter and formated day", function (done) {
         let dateFrom = "2017-05-21";
-        let dateTo = "2019-06-13";
+        let dateTo = moment("2019-06-13");
 
-        let expectedData = { day:
-                [ '2017-05-21',
+        let expectedData = {
+            day: [
+                '2017-05-21',
                     '2017-05-22',
                     '2017-05-23',
                     '2017-05-24',
@@ -68,37 +72,21 @@ describe("get periods", function () {
                     '2019-06-10',
                     '2019-06-11',
                     '2019-06-12',
-                    '2019-06-13' ],
-            month:
-                [ '2017-06',
-                    '2017-07',
-                    '2017-08',
-                    '2017-09',
-                    '2017-10',
-                    '2017-11',
-                    '2017-12',
-                    '2018-01',
-                    '2018-02',
-                    '2018-03',
-                    '2018-04',
-                    '2018-05',
-                    '2018-06',
-                    '2018-07',
-                    '2018-08',
-                    '2018-09',
-                    '2018-10',
-                    '2018-11',
-                    '2018-12',
-                    '2019-01',
-                    '2019-02',
-                    '2019-03',
-                    '2019-04',
-                    '2019-05' ] };
+                    '2019-06-13'
+                ],
+            month: [ '2017-06', '2019-04', '2019-05' ],
+            quarter: [
+                '2017-3rd',
+                    '2017-4th',
+                    '2018-1st',
+                    '2018-2nd',
+                    '2018-3rd',
+                    '2018-4th',
+                    '2019-1st'
+                ]
+        };
 
-        getPeriods(dateFrom, dateTo, "month").should.be.eql(expectedData);
+        getPeriods(dateFrom, dateTo, {maxGranularity: "quarter", format: { day: "dd/MM/YY" }}).should.be.eql(expectedData);
         done();
     });
 });
-let dateFrom = "2017-05-21";
-let dateTo = "2019-06-13";
-console.log(getPeriods(dateFrom, dateTo, "half_year"))
