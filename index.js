@@ -81,7 +81,4 @@ function getRange(dateFrom, dateTo, config = {}) {
     return dates;
 }
 
-
-console.log(getRange("2018-01-01", "2019-12-15", {formats: {day: "DD/MM/YY"}, maxGranularity: 'quarter'}));
-
 module.exports = getRange;
