@@ -40,20 +40,24 @@ You can restrict maximal granularity and define custom date formats in the next 
 
 let getRanges = require("optimal-date-range");
 
-return getRange("2018-01-01", "2019-12-15", { formats: {day: "DD/MM/YY"}, maxGranularity: 'quarter' });
+return getRange(
+    "2018-01-01",
+     "2019-12-15",
+    { formats: {day: "DD/MM/YY"}, maxGranularity: 'quarter' }
+);
 
 /*
 Returns object
 
 { quarter:
-   [ '2018-01-01T00:00:00+02:00',
-     '2018-04-01T00:00:00+03:00',
-     '2018-07-01T00:00:00+03:00',
-     '2018-10-01T00:00:00+03:00',
-     '2019-01-01T00:00:00+02:00',
-     '2019-04-01T00:00:00+03:00',
-     '2019-07-01T00:00:00+03:00' ],
-  month: [ '2019-10-01T00:00:00+03:00', '2019-11-01T00:00:00+02:00' ],
+   [ '2018-1st',
+     '2018-2nd',
+     '2018-3rd',
+     '2018-4th',
+     '2019-1st',
+     '2019-2nd',
+     '2019-3rd' ],
+  month: [ '2019-10', '2019-11' ],
   day:
    [ '01/12/19',
      '02/12/19',
