@@ -34,7 +34,7 @@ Returns object
 */
 ```
 
-You can restrict maximal granularity and define custom date formats in the next way:
+You can restrict year/month/quarter granularity and define custom date formats in the next way:
 
 ```js
 
@@ -43,7 +43,7 @@ let getRanges = require("optimal-date-range");
 return getRange(
     "2018-01-01",
      "2019-12-15",
-    { formats: {day: "DD/MM/YY"}, maxGranularity: 'quarter' }
+    { formats: {day: "DD/MM/YY"}, restrictedGranularity: {year: true} }
 );
 
 /*
