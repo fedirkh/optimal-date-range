@@ -1,6 +1,5 @@
 "use strict";
 
-const R = require('ramda');
 const moment = require("moment");
 
 const GRANULARITY = {
@@ -19,15 +18,8 @@ const FORMATS = {
 
 let formatDate = (format, date)=>(new moment(date).format(format));
 
-let isGranularityAcceptable = (maxGranularity, granularity)=> {
-    const GRANULARITY_WEIGHT = {
-        day: 1,
-        month: 2,
-        quarter: 3,
-        year: 4
-    };
-
-    return GRANULARITY_WEIGHT[granularity] <= GRANULARITY_WEIGHT[maxGranularity];
+let isGranularityAcceptable = (restrictedGranularity, granularity)=> {
+    return restrictedGranularity[granularity] !== true
 };
 
 let isYearStart = date=>(date.month() === 0 && date.date() === 1);
@@ -40,8 +32,8 @@ let isMonthStart = date=>date.date() === 1;
 let isFullMonthIncluded = (startDate, lastDate)=>+moment(+startDate).add(1, "M") <= +lastDate;
 
 function getRange(dateFrom, dateTo, config = {}) {
-    let maxGranularity = config.maxGranularity || GRANULARITY.year;
-    let formats = R.mergeLeft(config.formats || {}, FORMATS);
+    let restrictedGranularity = config.restrictedGranularity || {};
+    let formats = { ...FORMATS, ...(config.formats || {})};
 
     let formatDay = formatDate.bind(null, formats.day);
     let formatMonth = formatDate.bind(null, formats.month);
@@ -53,21 +45,21 @@ function getRange(dateFrom, dateTo, config = {}) {
     let to = moment(dateTo);
 
     while (+d <= +to) {
-        if (isGranularityAcceptable(maxGranularity, GRANULARITY.year) && isYearStart(d) && isFullYearIncluded(d, to)) {
+        if (isGranularityAcceptable(restrictedGranularity, GRANULARITY.year) && isYearStart(d) && isFullYearIncluded(d, to)) {
             if (!dates[GRANULARITY.year]) dates[GRANULARITY.year] = [];
             dates[GRANULARITY.year].push(formatYear(d));
             d.add(1, 'y');
             continue;
         }
 
-        if (isGranularityAcceptable(maxGranularity, GRANULARITY.quarter) && isQuarterStart(d) && isFullQuarterIncluded(d, to)) {
+        if (isGranularityAcceptable(restrictedGranularity, GRANULARITY.quarter) && isQuarterStart(d) && isFullQuarterIncluded(d, to)) {
             if (!dates[GRANULARITY.quarter]) dates[GRANULARITY.quarter] = [];
             dates[GRANULARITY.quarter].push(formatQuarter(d));
             d.add(1, 'Q');
             continue;
         }
 
-        if (isGranularityAcceptable(maxGranularity, GRANULARITY.month) && isMonthStart(d) && isFullMonthIncluded(d, to)) {
+        if (isGranularityAcceptable(restrictedGranularity, GRANULARITY.month) && isMonthStart(d) && isFullMonthIncluded(d, to)) {
             if (!dates[GRANULARITY.month]) dates[GRANULARITY.month] = [];
             dates[GRANULARITY.month].push(formatMonth(d));
             d.add(1, 'M');
