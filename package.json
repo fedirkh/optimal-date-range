@@ -1,7 +1,7 @@
 {
   "name": "optimal-date-range",
-  "version": "3.0.0",
-  "description": "Returns periods of dates in target date range with custom max period of time",
+  "version": "3.0.1",
+  "description": "Returns periods of time in target date range.",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test"

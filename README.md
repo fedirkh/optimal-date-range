@@ -1,6 +1,8 @@
 # optimal-date-range
 
-Returns periods of time in target time range
+Returns periods of time in target date range.
+
+You can simply count time between 2 dates in human acceptable format.
 
 ## Example
 
@@ -43,21 +45,25 @@ let getRanges = require("optimal-date-range");
 return getRange(
     "2018-01-01",
      "2019-12-15",
-    { formats: {day: "DD/MM/YY"}, restrictedGranularity: {year: true} }
+    { formats: {day: "DD/MM/YY"}, restrictedGranularity: {quarter: true} }
 );
 
 /*
 Returns object
 
-{ quarter:
-   [ '2018-1st',
-     '2018-2nd',
-     '2018-3rd',
-     '2018-4th',
-     '2019-1st',
-     '2019-2nd',
-     '2019-3rd' ],
-  month: [ '2019-10', '2019-11' ],
+{ year: [ '2018' ],
+  month:
+   [ '2019-01',
+     '2019-02',
+     '2019-03',
+     '2019-04',
+     '2019-05',
+     '2019-06',
+     '2019-07',
+     '2019-08',
+     '2019-09',
+     '2019-10',
+     '2019-11' ],
   day:
    [ '01/12/19',
      '02/12/19',
