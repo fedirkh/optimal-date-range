@@ -90,6 +90,18 @@ describe("get periods", function () {
         done();
     });
 
+    it("should return expected range of years excluding all others", function (done) {
+        let dateFrom = "2003-01-01";
+        let dateTo = moment("2019-05-07");
+
+        let expectedData = {
+            year: ["2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"]
+        };
+
+        getPeriods(dateFrom, dateTo, {restrictedGranularity: {month: true, day: true, quarter: true}}).should.be.eql(expectedData);
+        done();
+    });
+
     it("should return expected periods with restricted quarter and month. Also with formatted day", function (done) {
         let dateFrom = "2017-05-21";
         let dateTo = moment("2019-06-13");
