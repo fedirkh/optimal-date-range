@@ -31,6 +31,17 @@ let isFullQuarterIncluded = (startDate, lastDate)=>+moment(+startDate).add(1, "Q
 let isMonthStart = date=>date.date() === 1;
 let isFullMonthIncluded = (startDate, lastDate)=>+moment(+startDate).add(1, "M") <= +lastDate;
 
+function saveDate(granularity, unit, formatFn, dates, d) {
+    if (!dates[granularity]) dates[granularity] = [];
+    dates[granularity].push(formatFn(d));
+    d.add(1, unit);
+}
+
+const saveYear = saveDate.bind(null, GRANULARITY.year, 'y');
+const saveQuarter = saveDate.bind(null, GRANULARITY.quarter, 'Q');
+const saveMonth = saveDate.bind(null, GRANULARITY.month, 'M');
+const saveDay = saveDate.bind(null, GRANULARITY.day, 'd');
+
 function getRange(dateFrom, dateTo, config = {}) {
     let restrictedGranularity = config.restrictedGranularity || {};
     let formats = { ...FORMATS, ...(config.formats || {})};
@@ -46,29 +57,37 @@ function getRange(dateFrom, dateTo, config = {}) {
 
     while (+d <= +to) {
         if (isGranularityAcceptable(restrictedGranularity, GRANULARITY.year) && isYearStart(d) && isFullYearIncluded(d, to)) {
-            if (!dates[GRANULARITY.year]) dates[GRANULARITY.year] = [];
-            dates[GRANULARITY.year].push(formatYear(d));
-            d.add(1, 'y');
+            saveYear(formatYear, dates, d);
             continue;
         }
 
         if (isGranularityAcceptable(restrictedGranularity, GRANULARITY.quarter) && isQuarterStart(d) && isFullQuarterIncluded(d, to)) {
-            if (!dates[GRANULARITY.quarter]) dates[GRANULARITY.quarter] = [];
-            dates[GRANULARITY.quarter].push(formatQuarter(d));
-            d.add(1, 'Q');
+            saveQuarter(formatQuarter, dates, d);
             continue;
         }
 
         if (isGranularityAcceptable(restrictedGranularity, GRANULARITY.month) && isMonthStart(d) && isFullMonthIncluded(d, to)) {
-            if (!dates[GRANULARITY.month]) dates[GRANULARITY.month] = [];
-            dates[GRANULARITY.month].push(formatMonth(d));
-            d.add(1, 'M');
+            saveMonth(formatMonth, dates, d);
             continue;
         }
 
-        if (!dates[GRANULARITY.day]) dates[GRANULARITY.day] = [];
-        dates[GRANULARITY.day].push(formatDay(d));
-        d.add(1, 'd');
+        if (isGranularityAcceptable(restrictedGranularity, GRANULARITY.day)) {
+            saveDay(formatDay, dates, d);
+            continue;
+        }
+
+        if (!isGranularityAcceptable(restrictedGranularity, GRANULARITY.day)) {
+            if (restrictedGranularity.month !== true) {
+                saveMonth(formatMonth, dates, d);
+                continue;
+            } else if (restrictedGranularity.quarter !== true) {
+                saveQuarter(formatQuarter, dates, d);
+                continue;
+            } else if (restrictedGranularity.year !== true) {
+                saveYear(formatYear, dates, d);
+                continue;
+            }
+        }
     }
     return dates;
 }
